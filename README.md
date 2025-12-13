@@ -9,8 +9,6 @@
   # 🌾 YieldGuard
   
   ### AI-Powered Crop Insurance Platform with Automated Payouts
-  
-  *Protecting farmers from crop failures through blockchain technology and artificial intelligence*
 
   [![Next.js](https://img.shields.io/badge/Next.js-15.2.6-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
   [![Ethereum](https://img.shields.io/badge/Ethereum-Sepolia-3C3C3D?style=for-the-badge&logo=ethereum)](https://ethereum.org/)
