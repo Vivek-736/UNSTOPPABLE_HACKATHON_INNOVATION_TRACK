@@ -1,0 +1,64 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">YieldGuard registration illustration</title>
+  <desc id="desc">Minimal scene of a form panel floating above a map-like farm grid, in indigo and black.</desc>
+  <rect width="1200" height="900" fill="#0b0b10"/>
+
+  <rect x="80" y="80" width="1040" height="740" rx="40" fill="#020617" stroke="#111827" stroke-width="2"/>
+
+  <g stroke="#1f2937" stroke-width="1.5" opacity="0.95" transform="translate(140,180)">
+    <defs>
+      <pattern id="smallGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none"/>
+      </pattern>
+    </defs>
+    <rect width="520" height="440" rx="32" fill="#020617"/>
+    <rect width="520" height="440" rx="32" fill="url(#smallGrid)" opacity="0.55"/>
+    <path d="M20 220 C120 180 220 260 320 220 C420 180 480 210 500 200" stroke="#111827" fill="none" stroke-width="2"/>
+    <circle cx="130" cy="250" r="7" fill="#4f46e5"/>
+    <circle cx="260" cy="210" r="7" fill="#4f46e5"/>
+    <circle cx="390" cy="240" r="7" fill="#4f46e5"/>
+    <circle cx="490" cy="205" r="7" fill="#4f46e5"/>
+    <path d="M130 250 L260 210 L390 240 L490 205" stroke="#4f46e5" stroke-width="1.5" fill="none"/>
+  </g>
+
+  <g transform="translate(640,200)">
+    <rect x="0" y="0" width="360" height="380" rx="24" fill="#020617" stroke="#4b5563"/>
+    <rect x="0" y="36" width="360" height="1" fill="#111827"/>
+    <circle cx="24" cy="18" r="4" fill="#ef4444"/>
+    <circle cx="40" cy="18" r="4" fill="#f59e0b"/>
+    <circle cx="56" cy="18" r="4" fill="#22c55e"/>
+
+    <rect x="24" y="64" width="312" height="46" rx="10" fill="#020617" stroke="#374151"/>
+    <text x="36" y="92" fill="#9ca3af" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="12">Region</text>
+
+    <rect x="24" y="128" width="312" height="46" rx="10" fill="#020617" stroke="#374151"/>
+    <text x="36" y="156" fill="#9ca3af" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="12">Crop type</text>
+
+    <rect x="24" y="192" width="146" height="46" rx="10" fill="#020617" stroke="#374151"/>
+    <text x="36" y="220" fill="#9ca3af" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="12">Start date</text>
+
+    <rect x="190" y="192" width="146" height="46" rx="10" fill="#020617" stroke="#374151"/>
+    <text x="202" y="220" fill="#9ca3af" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="12">End date</text>
+
+    <rect x="24" y="268" width="312" height="52" rx="26" fill="#4f46e5"/>
+    <text x="80" y="299" fill="#e5e7eb" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="14" font-weight="600">Create on-chain policy</text>
+  </g>
+
+  <g transform="translate(180,650)">
+    <rect x="0" y="0" width="260" height="90" rx="16" fill="#020617" stroke="#1f2937"/>
+    <text x="20" y="34" fill="#9ca3af" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="12">Median form completion</text>
+    <text x="20" y="60" fill="#e5e7eb" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="24" font-weight="600">&lt; 90 seconds</text>
+  </g>
+
+  <g transform="translate(470,650)">
+    <rect x="0" y="0" width="260" height="90" rx="16" fill="#020617" stroke="#1f2937"/>
+    <text x="20" y="34" fill="#9ca3af" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="12">Fields stored</text>
+    <text x="20" y="60" fill="#e5e7eb" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="24" font-weight="600">On-chain only</text>
+  </g>
+
+  <g transform="translate(760,650)">
+    <rect x="0" y="0" width="260" height="90" rx="16" fill="#020617" stroke="#1f2937"/>
+    <text x="20" y="34" fill="#9ca3af" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="12">Policy mutation</text>
+    <text x="20" y="60" fill="#e5e7eb" font-family="system-ui, -apple-system, BlinkMacSystemFont" font-size="24" font-weight="600">Immutable</text>
+  </g>
+</svg>
