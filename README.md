@@ -103,52 +103,6 @@ YieldGuard revolutionizes crop insurance with:
 
 ---
 
-## 📦 Installation
-
-### Prerequisites
-- Node.js 18+ and npm
-- MetaMask or compatible Web3 wallet
-- Sepolia testnet ETH (for deployment)
-
-### Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Vivek-736/yield-guard.git
-   cd yield-guard
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Configure environment variables**
-   
-   Create a `.env` file in the root directory:
-   ```env
-   NEXT_PUBLIC_PRIVY_APP_ID=your_privy_app_id
-   NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
-   NEXT_PUBLIC_WEATHER_API_KEY=your_openweathermap_api_key
-   ```
-
-4. **Deploy smart contracts** (if needed)
-   ```bash
-   npm run hardhat compile
-   npm run hardhat ignition deploy ./ignition/modules/InsuranceRegistry.ts --network sepolia
-   ```
-
-5. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-6. **Open your browser**
-   
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
----
-
 ## 🎮 Usage Guide
 
 ### For Farmers
@@ -277,22 +231,6 @@ struct Policy {
 - Comprehensive error handling
 - Responsive, accessible UI
 - Production-ready smart contracts
-
----
-
-## 📸 Screenshots
-
-### Homepage
-Beautiful landing page with glassmorphism design and clear call-to-action.
-
-### Policy Registration
-Intuitive form with real-time validation and premium calculation.
-
-### AI Claim Verification
-Detailed analysis with weather data visualization and transparent decision-making.
-
-### Automated Payout
-Instant confirmation with transaction hash and blockchain explorer link.
 
 ---
 
