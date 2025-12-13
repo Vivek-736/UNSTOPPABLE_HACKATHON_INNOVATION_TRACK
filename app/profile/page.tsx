@@ -4,8 +4,9 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useFarmerProfile } from "@/lib/hooks/useFarmerProfile";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Shield, ArrowLeft, Calendar, MapPin, Wheat } from "lucide-react";
+import { Shield, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { PolicyCard } from "@/components/profile/policy-card";
 
 export default function ProfilePage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -84,64 +85,9 @@ export default function ProfilePage() {
         </div>
 
         <div className="space-y-6">
-          {policies.map((policy, index) => {
-            const startDate = new Date(policy.startDate * 1000).toLocaleDateString();
-            const endDate = new Date(policy.endDate * 1000).toLocaleDateString();
-            // eslint-disable-next-line react-hooks/purity
-            const isActive = policy.active && Date.now() / 1000 < policy.endDate;
-
-            return (
-              <div
-                key={index}
-                className="border border-gray-200 rounded-lg p-6 hover:border-indigo-300 transition-colors"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-black mb-1">Policy #{index + 1}</h3>
-                    <div className="flex items-center space-x-2">
-                      {isActive ? (
-                        <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full">
-                          Active
-                        </span>
-                      ) : (
-                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-sm font-medium rounded-full">
-                          Expired
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div className="flex items-start space-x-3">
-                    <MapPin className="h-5 w-5 text-indigo-600 mt-0.5" />
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">Region</p>
-                      <p className="text-black font-medium">{policy.region}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <Wheat className="h-5 w-5 text-indigo-600 mt-0.5" />
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">Crop Type</p>
-                      <p className="text-black font-medium">{policy.crop}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <Calendar className="h-5 w-5 text-indigo-600 mt-0.5" />
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">Coverage Period</p>
-                      <p className="text-black font-medium">
-                        {startDate} - {endDate}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {policies.map((policy, index) => (
+            <PolicyCard key={index} index={index} policy={policy} />
+          ))}
         </div>
         <div className="mt-8 text-center">
           <Link href="/register">

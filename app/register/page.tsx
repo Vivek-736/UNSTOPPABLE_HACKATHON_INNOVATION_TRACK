@@ -12,6 +12,7 @@ import {
   Shield,
   ArrowLeft,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function RegisterPage() {
     e.preventDefault();
 
     if (!authenticated) {
-      alert("Please connect your wallet first");
+      toast.error("Please connect your wallet first");
       return;
     }
 
@@ -44,11 +45,11 @@ export default function RegisterPage() {
         endTimestamp
       );
 
-      alert("Policy created successfully!");
+      toast.success("Policy created successfully");
       router.push("/");
     } catch (error) {
       console.error("Error creating policy:", error);
-      alert("Failed to create policy. Please try again.");
+      toast.error("Failed to create policy. Please try again.");
     }
   };
 

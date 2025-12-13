@@ -4,6 +4,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import Provider from "./provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={`${ubuntu.className} antialiased`}>
         <Provider>
           {children}
+          <Toaster />
         </Provider>
       </body>
     </html>
