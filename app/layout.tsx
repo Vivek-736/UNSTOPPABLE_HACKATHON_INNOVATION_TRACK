@@ -3,6 +3,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
+import Provider from "./provider";
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
@@ -23,11 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${ubuntu.className} antialiased`}
-      >
-        {children}
+    <html 
+      lang="en"
+      suppressHydrationWarning
+    >
+      <body className={`${ubuntu.className} antialiased`}>
+        <Provider>
+          {children}
+        </Provider>
       </body>
     </html>
   );
