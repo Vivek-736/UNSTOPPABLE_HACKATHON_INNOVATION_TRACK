@@ -60,8 +60,13 @@ export function useInsuranceContract() {
     async (farmerAddress: string): Promise<number[]> => {
       if (!contract) throw new Error("Contract not initialized");
       
-      const policyIds = await contract.getPoliciesByFarmer(farmerAddress);
-      return policyIds.map((id: bigint) => Number(id));
+      try {
+        const policyIds = await contract.getPoliciesByFarmer(farmerAddress);
+        return policyIds.map((id: bigint) => Number(id));
+      } catch (error) {
+        console.error("Error fetching policies:", error);
+        return [];
+      }
     },
     [contract]
   );

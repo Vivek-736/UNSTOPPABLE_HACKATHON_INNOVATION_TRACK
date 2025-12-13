@@ -62,7 +62,6 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
       <header className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Link href="/" className="flex items-center space-x-2 text-gray-600 hover:text-black">
@@ -72,7 +71,6 @@ export default function RegisterPage() {
         </div>
       </header>
 
-      {/* Form */}
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-black mb-4">Register Your Farm</h1>
