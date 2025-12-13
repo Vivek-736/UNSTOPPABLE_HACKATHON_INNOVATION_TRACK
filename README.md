@@ -154,21 +154,6 @@ YieldGuard revolutionizes crop insurance with:
 - `getPoliciesByFarmer()` - Retrieve farmer's policies
 - `policies()` - View policy details
 
-**Policy Structure:**
-```solidity
-struct Policy {
-    uint256 id;
-    address farmer;
-    string crop;
-    string region;
-    uint256 premium;
-    uint256 coverageAmount;
-    uint256 startDate;
-    uint256 endDate;
-    bool active;
-}
-```
-
 **Automated Payout Logic:**
 1. Validates policy is active and within coverage period
 2. Checks contract has sufficient funds
