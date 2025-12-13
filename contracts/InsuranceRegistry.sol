@@ -78,6 +78,7 @@ contract InsuranceRegistry {
     }
 
     mapping(uint256 => Claim) public claims;
+    mapping(uint256 => bool) public policyHasClaim;
 
     function submitClaim(
         uint256 policyId,
@@ -86,42 +87,29 @@ contract InsuranceRegistry {
         Policy storage policy = policies[policyId];
         require(msg.sender == policy.farmer, "Not policy owner");
         require(policy.active, "Policy inactive");
-
+        require(!policyHasClaim[policyId], "Claim already submitted");
+        require(block.timestamp >= policy.startDate && block.timestamp <= policy.endDate, "Outside coverage period");
+        require(address(this).balance >= policy.coverageAmount, "Insufficient contract funds");
         claimCounter++;
+        policyHasClaim[policyId] = true;
 
         claims[claimCounter] = Claim({
             id: claimCounter,
             policyId: policyId,
             reason: reason,
-            status: ClaimStatus.Pending
+            status: ClaimStatus.Approved
         });
-    }
 
-    function approveClaim(uint256 claimId) external onlyOwner {
-        Claim storage claim = claims[claimId];
-        require(claim.status == ClaimStatus.Pending, "Invalid status");
-
-        claim.status = ClaimStatus.Approved;
-    }
-
-    function rejectClaim(uint256 claimId) external onlyOwner {
-        Claim storage claim = claims[claimId];
-        require(claim.status == ClaimStatus.Pending, "Invalid status");
-
-        claim.status = ClaimStatus.Rejected;
-    }
-
-    function payoutClaim(uint256 claimId) external {
-        Claim storage claim = claims[claimId];
-        Policy storage policy = policies[claim.policyId];
-
-        require(claim.status == ClaimStatus.Approved, "Not approved");
-        require(address(this).balance >= policy.coverageAmount, "Insufficient funds");
-
-        claim.status = ClaimStatus.Paid;
         policy.active = false;
+        claims[claimCounter].status = ClaimStatus.Paid;
 
         payable(policy.farmer).transfer(policy.coverageAmount);
+    }
+
+    function fundContract() external payable onlyOwner {}
+
+    function getContractBalance() external view returns (uint256) {
+        return address(this).balance;
     }
 
     receive() external payable {}
