@@ -1,7 +1,9 @@
 "use client";
 
 import type { Policy } from "@/lib/hooks/useInsuranceContract";
-import { Calendar, MapPin, Wheat } from "lucide-react";
+import { Calendar, MapPin, Wheat, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface PolicyCardProps {
   index: number;
@@ -59,6 +61,17 @@ export function PolicyCard({ index, policy }: PolicyCardProps) {
           </div>
         </div>
       </div>
+
+      {isActive && (
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <Link href={`/claim?policy=${index}`}>
+            <Button className="w-full sm:w-auto bg-indigo-600 text-white hover:bg-indigo-700 rounded-full px-6 h-10 text-sm flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Submit Claim
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
