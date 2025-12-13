@@ -3,7 +3,7 @@
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { INSURANCE_REGISTRY_ADDRESS } from "@/contracts/deployed";
+import { INSURANCE_REGISTRY_ADDRESS, SEPOLIA_CHAIN_ID } from "@/contracts/deployed";
 import InsuranceRegistryABI from "@/lib/abi/InsuranceRegistry.json";
 
 export interface Policy {
@@ -23,21 +23,86 @@ export function useInsuranceContract() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (authenticated && wallets[0]) {
+    let cancelled = false;
+
+    const setupContract = async () => {
+      if (!authenticated || !wallets[0]) {
+        setContract(null);
+        return;
+      }
+
       const wallet = wallets[0];
-      wallet.getEthereumProvider().then((provider) => {
+      const provider = await wallet.getEthereumProvider();
+
+      try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const ethersProvider = new ethers.BrowserProvider(provider as any);
-        ethersProvider.getSigner().then((signer) => {
-          const contractInstance = new ethers.Contract(
-            INSURANCE_REGISTRY_ADDRESS,
-            InsuranceRegistryABI,
-            signer
-          );
-          setContract(contractInstance);
-        });
-      });
-    }
+        const requestFn = (provider as any).request?.bind(provider as any);
+
+        if (requestFn) {
+          const chainIdHex = await requestFn({ method: "eth_chainId" });
+          const currentChainId = parseInt(String(chainIdHex), 16);
+
+          if (currentChainId !== SEPOLIA_CHAIN_ID) {
+            try {
+              await requestFn({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId: "0xaa36a7" }], // Sepolia
+              });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (switchError: any) {
+              if (switchError?.code === 4902) {
+                try {
+                  await requestFn({
+                    method: "wallet_addEthereumChain",
+                    params: [
+                      {
+                        chainId: "0xaa36a7",
+                        chainName: "Sepolia",
+                        nativeCurrency: {
+                          name: "SepoliaETH",
+                          symbol: "SepoliaETH",
+                          decimals: 18,
+                        },
+                        rpcUrls: ["https://ethereum-sepolia-rpc.publicnode.com"],
+                        blockExplorerUrls: ["https://sepolia.etherscan.io"],
+                      },
+                    ],
+                  });
+                } catch (addError) {
+                  console.warn("User rejected adding Sepolia network", addError);
+                  setContract(null);
+                  return;
+                }
+              } else {
+                console.warn("User rejected switching to Sepolia", switchError);
+                setContract(null);
+                return;
+              }
+            }
+          }
+        }
+      } catch (networkError) {
+        console.warn("Failed to verify or switch network", networkError);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ethersProvider = new ethers.BrowserProvider(provider as any);
+      const signer = await ethersProvider.getSigner();
+      if (cancelled) return;
+
+      const contractInstance = new ethers.Contract(
+        INSURANCE_REGISTRY_ADDRESS,
+        InsuranceRegistryABI,
+        signer
+      );
+      setContract(contractInstance);
+    };
+
+    setupContract();
+
+    return () => {
+      cancelled = true;
+    };
   }, [authenticated, wallets]);
 
   const createPolicy = useCallback(
@@ -76,6 +141,7 @@ export function useInsuranceContract() {
       if (!contract) throw new Error("Contract not initialized");
       
       const policy = await contract.policies(policyId);
+      
       return {
         farmer: policy[0],
         region: policy[1],
