@@ -98,7 +98,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
               {primaryCta ? (
                 <Link href={primaryCta.href} className="inline-flex">
-                  <Button className="bg-indigo-600 text-white hover:bg-indigo-700 px-6 h-11 rounded-full text-sm sm:text-base font-medium flex items-center gap-2">
+                  <Button className="bg-indigo-600 text-white hover:bg-indigo-700 px-10 h-11 rounded-full text-sm sm:text-base font-medium flex items-center gap-2">
                     {primaryCta.label}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
