@@ -13,7 +13,6 @@ interface PolicyCardProps {
 export function PolicyCard({ index, policy }: PolicyCardProps) {
   const startMs = policy.startDate * 1000;
   const endMs = policy.endDate * 1000;
-
   const startDateLabel = new Date(startMs).toLocaleDateString();
   const endDateLabel = new Date(endMs).toLocaleDateString();
 
@@ -62,7 +61,7 @@ export function PolicyCard({ index, policy }: PolicyCardProps) {
         </div>
       </div>
 
-      {isActive && (
+      {policy.active && (
         <div className="mt-4 pt-4 border-t border-gray-200">
           <Link href={`/claim?policy=${index}`}>
             <Button className="w-full sm:w-auto bg-indigo-600 text-white hover:bg-indigo-700 rounded-full px-6 h-10 text-sm flex items-center gap-2">

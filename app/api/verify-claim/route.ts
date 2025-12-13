@@ -61,7 +61,7 @@ async function getWeatherData(region: string): Promise<WeatherData | null> {
 async function verifyClaimWithGemini(
   claimData: ClaimData,
   weatherData: WeatherData | null
-): Promise<{ approve: boolean; reason: string }> {
+): Promise<{ approve: boolean; reason: string; detailedSummary: string }> {
   const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
   if (!apiKey) {
@@ -74,7 +74,7 @@ async function verifyClaimWithGemini(
 - Anomaly: ${weatherData.anomaly}`
     : `Weather API unavailable. Use your knowledge of typical weather patterns in ${claimData.region} during this period to assess.`;
 
-  const prompt = `You are an agricultural insurance claim verifier.
+  const prompt = `You are an agricultural insurance claim verifier with expertise in crop science and weather impact analysis.
 
         Given the following data, determine whether the crop failure claim
         should be APPROVED or REJECTED.
@@ -83,6 +83,7 @@ async function verifyClaimWithGemini(
         - Approve ONLY if weather conditions are severe enough to cause crop failure
         - Be conservative and factual
         - Consider the crop type and region
+        - Provide a detailed analysis summary
         - Output MUST be valid JSON
         - Do NOT include explanations outside JSON
 
@@ -97,7 +98,8 @@ async function verifyClaimWithGemini(
         Return JSON with this exact structure:
         {
             "approve": boolean,
-            "reason": "Brief explanation (max 100 words)"
+            "reason": "Brief decision explanation (max 80 words)",
+            "detailedSummary": "Comprehensive analysis covering: 1) Weather conditions observed, 2) Impact on the specific crop type, 3) Regional climate context, 4) Risk factors identified, 5) Final assessment rationale (max 200 words)"
         }
     `;
 
@@ -144,6 +146,7 @@ async function verifyClaimWithGemini(
     return {
       approve: result.approve === true,
       reason: result.reason || "No reason provided",
+      detailedSummary: result.detailedSummary || result.reason || "No detailed analysis available",
     };
   } catch (error) {
     console.error("Gemini API error:", error);

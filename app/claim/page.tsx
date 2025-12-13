@@ -7,7 +7,7 @@ import { ClaimForm } from "@/components/profile/claim-form";
 import { Shield, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 
 function ClaimPageContent() {
   const searchParams = useSearchParams();
@@ -17,12 +17,21 @@ function ClaimPageContent() {
 
   const policyIndex = parseInt(searchParams.get("policy") || "0", 10);
 
-  if (!authenticated) {
-    router.push("/profile");
-    return null;
-  }
+  const policy = policies[policyIndex];
 
-  if (loading) {
+  useEffect(() => {
+    if (!authenticated) {
+      router.push("/profile");
+    }
+  }, [authenticated, router]);
+
+  useEffect(() => {
+    if (!loading && policies.length > 0 && !policy) {
+      router.push("/profile");
+    }
+  }, [loading, policies.length, policy, router]);
+
+  if (!authenticated || loading) {
     return (
       <div className="min-h-screen bg-white relative overflow-hidden flex items-center justify-center">
         <div className="pointer-events-none absolute inset-0 opacity-60">
@@ -42,10 +51,7 @@ function ClaimPageContent() {
     );
   }
 
-  const policy = policies[policyIndex];
-
   if (!policy) {
-    router.push("/profile");
     return null;
   }
 

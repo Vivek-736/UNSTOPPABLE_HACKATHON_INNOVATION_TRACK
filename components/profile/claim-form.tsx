@@ -16,6 +16,7 @@ interface ClaimFormProps {
 interface VerificationResult {
   approve: boolean;
   reason: string;
+  detailedSummary: string;
   weatherData: {
     rainfall: number;
     temperature: number;
@@ -28,9 +29,10 @@ export function ClaimForm({ policy, policyId, onSuccess, onCancel }: ClaimFormPr
   const [claimReason, setClaimReason] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [claimSubmitted, setClaimSubmitted] = useState(false);
   const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
   
-  const { contract } = useInsuranceContract();
+  const { submitClaim } = useInsuranceContract();
 
   const handleVerify = async () => {
     if (!claimReason.trim()) {
@@ -82,7 +84,7 @@ export function ClaimForm({ policy, policyId, onSuccess, onCancel }: ClaimFormPr
       return;
     }
 
-    if (!contract) {
+    if (!submitClaim) {
       toast.error("Contract not loaded");
       return;
     }
@@ -90,10 +92,9 @@ export function ClaimForm({ policy, policyId, onSuccess, onCancel }: ClaimFormPr
     setSubmitting(true);
 
     try {
-      const tx = await contract.submitClaim(policyId, claimReason);
-      await tx.wait();
-      toast.success("Claim submitted successfully! Awaiting payout.");
-      onSuccess();
+      await submitClaim(policyId, claimReason);
+      toast.success("Claim approved! Payout transferred to your wallet.");
+      setClaimSubmitted(true);
     } catch (error) {
       console.error("Claim submission error:", error);
       toast.error("Failed to submit claim. Please try again.");
@@ -128,6 +129,7 @@ export function ClaimForm({ policy, policyId, onSuccess, onCancel }: ClaimFormPr
         />
       </div>
 
+
       {verificationResult && (
         <div
           className={`rounded-2xl p-4 border ${
@@ -142,13 +144,22 @@ export function ClaimForm({ policy, policyId, onSuccess, onCancel }: ClaimFormPr
             ) : (
               <XCircle className="h-5 w-5 text-red-600 mt-0.5" />
             )}
-            <div>
+            <div className="flex-1">
               <p className="font-semibold text-sm text-gray-900 mb-1">
                 {verificationResult.approve ? "Claim Approved" : "Claim Rejected"}
               </p>
               <p className="text-xs text-gray-700">{verificationResult.reason}</p>
             </div>
           </div>
+
+          {verificationResult.detailedSummary && (
+            <div className="mt-3 pt-3 border-t border-gray-300/50">
+              <p className="text-xs font-medium text-gray-700 mb-2">📊 Detailed Analysis</p>
+              <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">
+                {verificationResult.detailedSummary}
+              </p>
+            </div>
+          )}
 
           {verificationResult.weatherData && (
             <div className="mt-3 pt-3 border-t border-gray-300/50">
@@ -199,27 +210,47 @@ export function ClaimForm({ policy, policyId, onSuccess, onCancel }: ClaimFormPr
           </>
         ) : verificationResult.approve ? (
           <>
-            <Button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700 rounded-full"
-            >
-              {submitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Submitting...
-                </>
-              ) : (
-                "Submit Claim"
-              )}
-            </Button>
-            <Button
-              onClick={onCancel}
-              variant="outline"
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full"
-            >
-              Cancel
-            </Button>
+            {!claimSubmitted ? (
+              <>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                  className="flex-1 bg-emerald-600 text-white hover:bg-emerald-700 rounded-full"
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      Submitting...
+                    </>
+                  ) : (
+                    "Submit Claim"
+                  )}
+                </Button>
+                <Button
+                  onClick={onCancel}
+                  variant="outline"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full"
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <div className="w-full space-y-3">
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                    <p className="font-semibold text-sm text-emerald-900">Payout Successful!</p>
+                  </div>
+                  <p className="text-xs text-emerald-800">Your claim has been processed and the payout has been transferred to your wallet.</p>
+                </div>
+                <Button
+                  onClick={onCancel}
+                  className="w-full bg-indigo-600 text-white hover:bg-indigo-700 rounded-full"
+                >
+                  Back to Profile
+                </Button>
+              </div>
+            )}
           </>
         ) : (
           <Button

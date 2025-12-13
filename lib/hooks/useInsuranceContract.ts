@@ -7,9 +7,12 @@ import { INSURANCE_REGISTRY_ADDRESS, SEPOLIA_CHAIN_ID } from "@/contracts/deploy
 import InsuranceRegistryABI from "@/lib/abi/InsuranceRegistry.json";
 
 export interface Policy {
+  id: number;
   farmer: string;
-  region: string;
   crop: string;
+  region: string;
+  premium: number;
+  coverageAmount: number;
   startDate: number;
   endDate: number;
   active: boolean;
@@ -46,7 +49,7 @@ export function useInsuranceContract() {
             try {
               await requestFn({
                 method: "wallet_switchEthereumChain",
-                params: [{ chainId: "0xaa36a7" }], // Sepolia
+                params: [{ chainId: "0xaa36a7" }],
               });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (switchError: any) {
@@ -106,12 +109,17 @@ export function useInsuranceContract() {
   }, [authenticated, wallets]);
 
   const createPolicy = useCallback(
-    async (region: string, crop: string, startDate: number, endDate: number) => {
+    async (crop: string, region: string, coverageAmountEth: string, durationDays: number, premiumEth: string) => {
       if (!contract) throw new Error("Contract not initialized");
       
       setLoading(true);
       try {
-        const tx = await contract.createPolicy(region, crop, startDate, endDate);
+        const coverageAmount = ethers.parseEther(coverageAmountEth);
+        const premium = ethers.parseEther(premiumEth);
+        
+        const tx = await contract.createPolicy(crop, region, coverageAmount, durationDays, {
+          value: premium
+        });
         await tx.wait();
         return tx.hash;
       } finally {
@@ -143,12 +151,15 @@ export function useInsuranceContract() {
       const policy = await contract.policies(policyId);
       
       return {
-        farmer: policy[0],
-        region: policy[1],
+        id: Number(policy[0]),
+        farmer: policy[1],
         crop: policy[2],
-        startDate: Number(policy[3]),
-        endDate: Number(policy[4]),
-        active: policy[5],
+        region: policy[3],
+        premium: Number(ethers.formatEther(policy[4])),
+        coverageAmount: Number(ethers.formatEther(policy[5])),
+        startDate: Number(policy[6]),
+        endDate: Number(policy[7]),
+        active: policy[8],
       };
     },
     [contract]
@@ -161,6 +172,22 @@ export function useInsuranceContract() {
     return Number(count);
   }, [contract]);
 
+  const submitClaim = useCallback(
+    async (policyId: number, reason: string) => {
+      if (!contract) throw new Error("Contract not initialized");
+      
+      setLoading(true);
+      try {
+        const tx = await contract.submitClaim(policyId, reason);
+        await tx.wait();
+        return tx.hash;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [contract]
+  );
+
   return {
     contract,
     loading,
@@ -168,6 +195,7 @@ export function useInsuranceContract() {
     getPoliciesByFarmer,
     getPolicy,
     getPolicyCount,
+    submitClaim,
     isConnected: authenticated && contract !== null,
     walletAddress: wallets[0]?.address,
   };

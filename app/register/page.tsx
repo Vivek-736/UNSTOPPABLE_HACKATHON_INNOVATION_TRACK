@@ -22,6 +22,9 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     region: "",
     crop: "",
+    coverageAmount: "0.01",
+    premium: "0.001",
+    durationDays: "30",
     startDate: "",
     endDate: "",
   });
@@ -35,14 +38,12 @@ export default function RegisterPage() {
     }
 
     try {
-      const startTimestamp = Math.floor(new Date(formData.startDate).getTime() / 1000);
-      const endTimestamp = Math.floor(new Date(formData.endDate).getTime() / 1000);
-
       await createPolicy(
-        formData.region,
         formData.crop,
-        startTimestamp,
-        endTimestamp
+        formData.region,
+        formData.coverageAmount,
+        parseInt(formData.durationDays),
+        formData.premium
       );
 
       toast.success("Policy created successfully");
@@ -185,6 +186,68 @@ export default function RegisterPage() {
                     className="w-full bg-white/80"
                   />
                 </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="coverageAmount"
+                    className="block text-xs font-medium uppercase tracking-[0.16em] text-gray-500 mb-2"
+                  >
+                    Coverage Amount (ETH)
+                  </label>
+                  <Input
+                    id="coverageAmount"
+                    type="text"
+                    placeholder="0.01"
+                    value={formData.coverageAmount}
+                    onChange={(e) =>
+                      setFormData({ ...formData, coverageAmount: e.target.value })
+                    }
+                    required
+                    className="w-full bg-white/80"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="premium"
+                    className="block text-xs font-medium uppercase tracking-[0.16em] text-gray-500 mb-2"
+                  >
+                    Premium (ETH)
+                  </label>
+                  <Input
+                    id="premium"
+                    type="text"
+                    placeholder="0.001"
+                    value={formData.premium}
+                    onChange={(e) =>
+                      setFormData({ ...formData, premium: e.target.value })
+                    }
+                    required
+                    className="w-full bg-white/80"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="durationDays"
+                  className="block text-xs font-medium uppercase tracking-[0.16em] text-gray-500 mb-2"
+                >
+                  Duration (Days)
+                </label>
+                <Input
+                  id="durationDays"
+                  type="number"
+                  placeholder="30"
+                  value={formData.durationDays}
+                  onChange={(e) =>
+                    setFormData({ ...formData, durationDays: e.target.value })
+                  }
+                  required
+                  className="w-full bg-white/80"
+                />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">

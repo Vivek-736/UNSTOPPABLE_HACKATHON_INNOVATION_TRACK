@@ -3,28 +3,28 @@
     "inputs": [
       {
         "internalType": "string",
-        "name": "region",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
         "name": "crop",
         "type": "string"
       },
       {
+        "internalType": "string",
+        "name": "region",
+        "type": "string"
+      },
+      {
         "internalType": "uint256",
-        "name": "startDate",
+        "name": "coverageAmount",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "endDate",
+        "name": "durationDays",
         "type": "uint256"
       }
     ],
     "name": "createPolicy",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -57,9 +57,19 @@
     "name": "policies",
     "outputs": [
       {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
         "name": "farmer",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "crop",
+        "type": "string"
       },
       {
         "internalType": "string",
@@ -67,9 +77,14 @@
         "type": "string"
       },
       {
-        "internalType": "string",
-        "name": "crop",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "premium",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "coverageAmount",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -101,6 +116,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "policyId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "reason",
+        "type": "string"
+      }
+    ],
+    "name": "submitClaim",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]
