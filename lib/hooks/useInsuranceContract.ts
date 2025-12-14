@@ -172,6 +172,57 @@ export function useInsuranceContract() {
     return Number(count);
   }, [contract]);
 
+  const getAllPolicies = useCallback(async (): Promise<Policy[]> => {
+    if (!contract) return [];
+    
+    try {
+      const count = await contract.policyCounter();
+      const policies: Policy[] = [];
+      
+      for (let i = 1; i <= Number(count); i++) {
+        const policy = await contract.policies(i);
+        policies.push({
+          id: Number(policy.id),
+          farmer: policy.farmer,
+          crop: policy.crop,
+          region: policy.region,
+          premium: Number(ethers.formatEther(policy.premium)),
+          coverageAmount: Number(ethers.formatEther(policy.coverageAmount)),
+          startDate: Number(policy.startDate),
+          endDate: Number(policy.endDate),
+          active: policy.active,
+        });
+      }
+      return policies.reverse();
+    } catch (error) {
+      console.error("Error fetching all policies:", error);
+      return [];
+    }
+  }, [contract]);
+
+  const getAllClaims = useCallback(async (): Promise<any[]> => {
+    if (!contract) return [];
+
+    try {
+      const count = await contract.claimCounter();
+      const claims = [];
+
+      for (let i = 1; i <= Number(count); i++) {
+        const claim = await contract.claims(i);
+        claims.push({
+          id: Number(claim.id),
+          policyId: Number(claim.policyId),
+          reason: claim.reason,
+          status: Number(claim.status),
+        });
+      }
+      return claims.reverse();
+    } catch (error) {
+      console.error("Error fetching all claims:", error);
+      return [];
+    }
+  }, [contract]);
+
   const submitClaim = useCallback(
     async (policyId: number, reason: string) => {
       if (!contract) throw new Error("Contract not initialized");
@@ -195,6 +246,8 @@ export function useInsuranceContract() {
     getPoliciesByFarmer,
     getPolicy,
     getPolicyCount,
+    getAllPolicies,
+    getAllClaims,
     submitClaim,
     isConnected: authenticated && contract !== null,
     walletAddress: wallets[0]?.address,

@@ -68,6 +68,10 @@ export default function ProfilePage() {
             <span>Back to Home</span>
           </Link>
           
+          <Link href="/proof" className="text-sm font-medium text-gray-600 hover:text-indigo-600 hover:underline underline-offset-4 transition-colors">
+            Trust Ledger
+          </Link>
+          
           <Button 
             onClick={logout}
             variant="outline"
