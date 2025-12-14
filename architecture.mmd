@@ -1,0 +1,29 @@
+graph TD
+    User[Farmer]
+    WebApp[Web Application Next.js]
+    API[AI Verification API /api/verify-claim]
+    Contract[Smart Contract InsuranceRegistry.sol]
+    Weather[Weather Data Source]
+
+    %% Registration Flow
+    User -- 1. Connect Wallet & Register Policy --> WebApp
+    WebApp -- 2. Create Policy --> Contract
+
+    %% Claim Flow
+    User -- 3. Submit Claim Request --> WebApp
+    WebApp -- 4. Verify Claim Data --> API
+    API -- 5. Check Weather Conditions --> Weather
+    Weather -- 6. Return Data --> API
+    API -- 7. Approve/Reject --> WebApp
+    
+    %% Settlement
+    WebApp -- 8. If Approved: Submit Claim --> Contract
+    Contract -- 9. Validate & Payout --> User
+
+    classDef primary fill:#4f46e5,stroke:#312e81,color:white;
+    classDef secondary fill:#10b981,stroke:#065f46,color:white;
+    classDef contract fill:#f59e0b,stroke:#78350f,color:white;
+    
+    class WebApp primary;
+    class API secondary;
+    class Contract contract;
