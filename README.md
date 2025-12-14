@@ -142,6 +142,12 @@ YieldGuard revolutionizes crop insurance with:
 
 ---
 
+<img 
+  src="public/architecture.png" 
+  alt="Yield Guard Architecture" 
+  width="100%" 
+/>
+
 ## 🏗️ Smart Contract Architecture
 
 ### InsuranceRegistry Contract
@@ -207,13 +213,6 @@ YieldGuard revolutionizes crop insurance with:
 - Reduces insurance fraud through AI verification
 - Eliminates administrative overhead
 - Provides financial security during crop failures
-
-### Technical Excellence
-- Clean, modular architecture
-- Type-safe TypeScript throughout
-- Comprehensive error handling
-- Responsive, accessible UI
-- Production-ready smart contracts
 
 ---
 
