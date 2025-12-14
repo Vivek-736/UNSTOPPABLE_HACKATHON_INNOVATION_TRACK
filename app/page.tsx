@@ -45,6 +45,12 @@ export default function Home() {
             </div>
           </div>
 
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/proof" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">
+              Trust Ledger
+            </Link>
+          </nav>
+
           <div className="flex items-center space-x-3">
             {authenticated && hasProfile && (
               <Link href="/profile">
